@@ -60,12 +60,14 @@ export default function PaymentPage() {
                 0
             );
 
+            // Simple payment data without payment_details
             const paymentData = {
                 username: user.name,
                 user_id: user.id,
                 amount: total,
                 method: paymentMethod,
-                reservation_id: reservation.reservation_id
+                reservation_id: reservation.reservation_id,
+                payment_details: {} // Empty object to match API expectations
             };
 
             console.log("Sending payment data:", paymentData);
@@ -335,6 +337,23 @@ export default function PaymentPage() {
                                             </p>
                                         </div>
                                     </div>
+                                    
+                                    {/* Simple Instructions based on method */}
+                                    {paymentMethod === "cash" && (
+                                        <div className="mt-4 p-3 bg-gray-900/50 rounded-lg border border-gray-600">
+                                            <p className="text-sm text-gray-300">
+                                                Please prepare exact change for payment at the counter.
+                                            </p>
+                                        </div>
+                                    )}
+                                    
+                                    {paymentMethod === "credit_card" && (
+                                        <div className="mt-4 p-3 bg-gray-900/50 rounded-lg border border-gray-600">
+                                            <p className="text-sm text-gray-300">
+                                                Credit card details will be collected at the counter.
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -415,6 +434,16 @@ export default function PaymentPage() {
                                                 <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
                                                     <p className="text-sm text-gray-400">Amount Paid</p>
                                                     <p className="font-semibold text-white">{formatCurrency(paymentSuccess.amount)}</p>
+                                                </div>
+                                                <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
+                                                    <p className="text-sm text-gray-400">Payment Method</p>
+                                                    <p className="font-semibold text-white">
+                                                        {paymentMethods.find(m => m.id === paymentSuccess.method)?.name}
+                                                    </p>
+                                                </div>
+                                                <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
+                                                    <p className="text-sm text-gray-400">Payment ID</p>
+                                                    <p className="font-semibold text-white">{paymentSuccess.payment_id}</p>
                                                 </div>
                                             </div>
                                         </div>

@@ -6,45 +6,11 @@ export default async function handler(req, res) {
     }
 
     try {
-        const {
-            username,
-            user_id,
-            amount,
-            method,
-            reservation_id,
-            payment_details
-        } = req.body;
+        const { username, user_id, amount, method, reservation_id } = req.body;
 
-        // BASIC VALIDATION
+        // BASIC VALIDATION - only essential fields
         if (!username || !user_id || !amount || amount <= 0 || !method) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
-        }
-
-        // Additional validation depending on method
-        const errors = [];
-
-        if (method === "credit_card") {
-            if (!payment_details.cardNumber) errors.push("Card number required");
-            if (!payment_details.cardName) errors.push("Card name required");
-            if (!payment_details.cardExpiry) errors.push("Expiry required");
-            if (!payment_details.cardCVC) errors.push("CVC required");
-        }
-
-        if (method === "gcash") {
-            if (!payment_details.gcashNumber) errors.push("GCash number required");
-        }
-
-        if (method === "paypal") {
-            if (!payment_details.paypalEmail) errors.push("PayPal email required");
-        }
-
-        if (method === "bank_transfer") {
-            if (!payment_details.bankName) errors.push("Bank name required");
-            if (!payment_details.accountNumber) errors.push("Account number required");
-        }
-
-        if (errors.length > 0) {
-            return res.status(400).json({ success: false, message: errors.join(", ") });
         }
 
         // CREATE TRANSACTION ID
@@ -72,7 +38,8 @@ export default async function handler(req, res) {
             success: true,
             message: "Payment successful",
             payment_id,
-            transaction_id
+            transaction_id,
+            method
         });
         
     } catch (err) {
