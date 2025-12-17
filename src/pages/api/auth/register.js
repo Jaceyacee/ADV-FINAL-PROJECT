@@ -2,9 +2,7 @@ import sql from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 export default async function handler(req, res) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ message: "Method not allowed" });
-    }
+    
 
     try {
         const { name, email, password } = req.body;
